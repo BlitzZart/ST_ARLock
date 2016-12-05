@@ -61,7 +61,10 @@ namespace UnityEngine.Networking
 			int ypos = 40 + offsetY;
 			int spacing = 24 * (int)scale;
 
-			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
+
+            GUI.Label(new Rect(xpos, 10, 300 * scale, 20 * scale), "IP=" + manager.networkAddress + " port=" + manager.networkPort);
+
+            if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
 			{
 				if (GUI.Button(new Rect(xpos, ypos, 200 * scale, 20 * scale), "LAN Host(H)"))
 				{
