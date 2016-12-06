@@ -1,10 +1,14 @@
 #if ENABLE_UNET
 
+using System.Net;
+using System.Net.Sockets;
+
 namespace UnityEngine.Networking
 {
 	[AddComponentMenu("Network/NetworkManagerHUD")]
 	[RequireComponent(typeof(NetworkManager))]
 	[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+
 	public class NWM_HUD : MonoBehaviour
 	{
 		public NetworkManager manager;
@@ -18,7 +22,20 @@ namespace UnityEngine.Networking
 		// Runtime variable
 		bool showServer = false;
 
-		void Awake()
+        public string LocalIPAddress() {
+            IPHostEntry host;
+            string localIP = "";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList) {
+                if (ip.AddressFamily == AddressFamily.InterNetwork) {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
+            return localIP;
+        }
+
+        void Awake()
 		{
 			manager = GetComponent<NetworkManager>();
 		}
@@ -62,7 +79,7 @@ namespace UnityEngine.Networking
 			int spacing = 24 * (int)scale;
 
 
-            GUI.Label(new Rect(xpos, 10, 300 * scale, 20 * scale), "IP=" + manager.networkAddress + " port=" + manager.networkPort);
+            GUI.Label(new Rect(xpos, 10, 300 * scale, 20 * scale), "IP=" + LocalIPAddress() + " port=" + manager.networkPort);
 
             if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
 			{
