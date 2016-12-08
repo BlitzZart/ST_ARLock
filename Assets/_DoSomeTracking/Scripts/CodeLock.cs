@@ -76,9 +76,11 @@ public class CodeLock : MonoBehaviour {
 
         if (valid)
             StartCoroutine(SoundPlayer(1.3f, 0.1f, 5));
-        else
+        else {
+            entryString = "";
+            entryNumber = 0;
             StartCoroutine(SoundPlayer(0.37f, 0.15f, 2));
-
+        }
     }
 
     IEnumerator SoundPlayer(float pitch, float breakDuration, int count) {
