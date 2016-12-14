@@ -36,7 +36,7 @@ public class UI_ShowCode : MonoBehaviour {
     private void OnSubmitedCode(bool isValid) {
         text.fontSize = initFontSize;
         if (isValid) {
-            text.text = "OPEN";
+            text.text = "CORRECT";
             text.color = okColor;
         } else {
             text.text = "WRONG";
