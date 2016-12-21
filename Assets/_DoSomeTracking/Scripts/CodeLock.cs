@@ -14,6 +14,8 @@ public class CodeLock : MonoBehaviour {
 
     private AudioSource audioSource;
 
+    private bool useEnterButton = false;
+
 	void Start () {
         audioSource = GetComponent<AudioSource>();
         UI_Button.EventButtonPressed += OnPressed;
@@ -41,16 +43,36 @@ public class CodeLock : MonoBehaviour {
     }
 
     private void AddDigit(string digit) {
+
+        if (entryString.Length >= 4)
+            ClearInput();
+
+
         if (entryString.Length < 4) {
             entryString += digit;
             entryNumber = int.Parse(entryString);
-        } else {
-            ClearInput();
-            entryString = digit;
-            entryNumber = int.Parse(entryString);
+
+            if (EventNewCode != null) {
+                EventNewCode(entryNumber);
+            }
+
+            // Send without enter button
+            if (!useEnterButton && entryString.Length == 4) {
+                SubmitInput();
+            }
         }
-        if (EventNewCode != null)
-            EventNewCode(entryNumber);
+        else {
+            // Send with enter button
+            if (useEnterButton) {
+                ClearInput();
+                entryString = digit;
+                entryNumber = int.Parse(entryString);
+            }
+
+            if (EventNewCode != null) {
+                EventNewCode(entryNumber);
+            }
+        }
 
         audioSource.pitch = 1;
         audioSource.Play();
@@ -74,16 +96,18 @@ public class CodeLock : MonoBehaviour {
         if (EventSubmitCode != null)
             EventSubmitCode(valid);
 
-        if (valid)
+        if (valid) {
             StartCoroutine(SoundPlayer(1.3f, 0.1f, 5));
+        }
         else {
-            entryString = "";
-            entryNumber = 0;
+            //entryString = "";
+            //entryNumber = 0;
             StartCoroutine(SoundPlayer(0.37f, 0.15f, 2));
         }
     }
 
     IEnumerator SoundPlayer(float pitch, float breakDuration, int count) {
+        yield return new WaitForSeconds(0.1f);
         audioSource.pitch = pitch;
         for (int i = 0; i < count; i++) {
             audioSource.Play();

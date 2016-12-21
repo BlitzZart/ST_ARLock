@@ -45,6 +45,11 @@ public class UI_ShowCode : MonoBehaviour {
     }
 
     private void OnNewCode(int code) {
+        if (code == 0) {
+            text.color = new Color(1, 1, 1, 0);
+        } else {
+            text.color = new Color(1, 1, 1, 1);
+        }
         text.fontSize = initFontSize;
         text.text = code.ToString();
         text.color = enterColor;
