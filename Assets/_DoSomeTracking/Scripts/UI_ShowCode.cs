@@ -7,6 +7,7 @@ public class UI_ShowCode : MonoBehaviour {
 
     private Text text;
     private int initFontSize;
+    private int puzzleSolvedFontSize = 35;
 
     public Color enterColor, okColor, nokColor;
 
@@ -28,8 +29,8 @@ public class UI_ShowCode : MonoBehaviour {
     }
 
     private void OnSendMessage(string msg) {
-        text.color = okColor;
-        text.fontSize = initFontSize / 2;
+        text.color = enterColor;//okColor;
+        text.fontSize = puzzleSolvedFontSize;// initFontSize / 2;
         text.text = msg;
     }
 

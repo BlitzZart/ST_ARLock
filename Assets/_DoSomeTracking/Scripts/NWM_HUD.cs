@@ -17,10 +17,11 @@ namespace UnityEngine.Networking
 		[SerializeField] public int offsetY;
 
 
-        public float scale = 2;
+        public float scale = 1.5f;
+        GUIStyle style;
 
-		// Runtime variable
-		bool showServer = false;
+        // Runtime variable
+        bool showServer = false;
 
         public string LocalIPAddress() {
             IPHostEntry host;
@@ -40,12 +41,23 @@ namespace UnityEngine.Networking
 			manager = GetComponent<NetworkManager>();
 		}
 
-		void Update()
+        private void Start() {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            scale = Screen.currentResolution.width * 0.004f;
+#endif
+            style = new GUIStyle();
+            style.fontSize = 24;
+            style.fontStyle = FontStyle.Bold;
+
+            style.normal.textColor = Color.white;
+        }
+
+        void Update()
 		{
 			if (!showGUI)
 				return;
 
-			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
+            if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
 			{
 				if (Input.GetKeyDown(KeyCode.S))
 				{
@@ -77,9 +89,8 @@ namespace UnityEngine.Networking
 			int xpos = 10 + offsetX;
 			int ypos = 40 + offsetY;
 			int spacing = 24 * (int)scale;
-
-
-            GUI.Label(new Rect(xpos, 10, 300 * scale, 20 * scale), "IP=" + LocalIPAddress() + " port=" + manager.networkPort);
+            style.alignment = TextAnchor.UpperLeft;
+            GUI.Label(new Rect(xpos, 10, 300 * scale, 20 * scale), "IP=" + LocalIPAddress() + " port=" + manager.networkPort, style);
 
             if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null)
 			{
@@ -93,7 +104,8 @@ namespace UnityEngine.Networking
 				{
 					manager.StartClient();
 				}
-				manager.networkAddress = GUI.TextField(new Rect(xpos + 105 * scale, ypos, 95 * scale, 20 * scale), manager.networkAddress);
+                style.alignment = TextAnchor.MiddleCenter;
+                manager.networkAddress = GUI.TextField(new Rect(xpos + 105 * scale, ypos, 95 * scale, 20 * scale), manager.networkAddress, style);
 				ypos += spacing;
 
 				if (GUI.Button(new Rect(xpos, ypos, 200 * scale, 20 * scale), "LAN Server Only(S)"))
